@@ -246,6 +246,7 @@ const UserModal = ({ open, onClose, userId }) => {
 														required
 													>
 														<MenuItem value="admin">{i18n.t("userModal.form.admin")}</MenuItem>
+														<MenuItem value="supervisor">{i18n.t("userModal.form.supervisor")}</MenuItem>
 														<MenuItem value="user">{i18n.t("userModal.form.user")}</MenuItem>
 													</Field>
 												</>

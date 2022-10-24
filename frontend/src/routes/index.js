@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 
 import LoggedInLayout from "../layout";
 import Dashboard from "../pages/Dashboard/";
+import Log from "../pages/Log/";
 import Tickets from "../pages/Tickets/";
 import Signup from "../pages/Signup/";
 import Login from "../pages/Login/";
@@ -32,6 +33,7 @@ const Routes = () => {
           <WhatsAppsProvider>
             <LoggedInLayout>
               <Route exact path="/" component={Dashboard} isPrivate />
+              <Route exact path="/log" component={Log} isPrivate />
               <Route exact path="/tickets/:ticketId?" component={Tickets} isPrivate />
               <Route exact path="/connections" component={Connections} isPrivate />
               <Route exact path="/contacts" component={Contacts} isPrivate />

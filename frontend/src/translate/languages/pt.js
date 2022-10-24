@@ -256,6 +256,7 @@ const messages = {
           password: "Senha",
           profile: "Perfil",
           admin: "Administrador",
+          supervisor: "Supervisor",
           whatsapp: "Conexão Padrão",
           user: "Atendente",
           startWork: "Inicio",
