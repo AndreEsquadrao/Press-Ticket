@@ -13,6 +13,18 @@ const rules = {
 			"contacts-page:deleteContact",
 		],
 	},
+	supervisor: {
+		static: [
+			
+			"tickets-manager:showall",
+			"user-modal:editProfile",
+			
+			
+			
+			
+			
+		],
+	},
 };
 
 export default rules;

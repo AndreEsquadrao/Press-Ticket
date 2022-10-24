@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-
+import { Can } from "../../components/Can";
 import Paper from "@material-ui/core/Paper"
 import Container from "@material-ui/core/Container"
 import Grid from "@material-ui/core/Grid"
@@ -11,6 +11,7 @@ import useTickets from "../../hooks/useTickets"
 import { AuthContext } from "../../context/Auth/AuthContext";
 
 import { i18n } from "../../translate/i18n";
+
 
 import Chart from "./Chart"
 
@@ -91,7 +92,16 @@ const Dashboard = () => {
 							</Grid>
 						</Paper>
 					</Grid>
-					<Grid item xs={4}>
+
+
+
+
+					<Can
+        role={user.profile}
+        perform="drawer-admin-items:view"
+        yes={() => (
+          <>
+            <Grid item xs={4}>
 						<Paper className={classes.customFixedHeightPaper} style={{ overflow: "hidden" }}>
 							<Typography component="h3" variant="h6" color="primary" paragraph>
 								{i18n.t("dashboard.messages.closed.title")}
@@ -103,6 +113,18 @@ const Dashboard = () => {
 							</Grid>
 						</Paper>
 					</Grid>
+          </>
+        )}
+      />
+
+
+
+
+
+					
+
+
+
 					<Grid item xs={12}>
 						<Paper className={classes.fixedHeightPaper}>
 							<Chart />

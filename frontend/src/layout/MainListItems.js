@@ -8,6 +8,7 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import Divider from "@material-ui/core/Divider";
 import { Badge } from "@material-ui/core";
 import DashboardOutlinedIcon from "@material-ui/icons/DashboardOutlined";
+import AssignmentIndOutlinedIcon from "@material-ui/icons/AssignmentIndOutlined";
 import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
@@ -141,6 +142,11 @@ const MainListItems = (props) => {
               to="/settings"
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
+            />
+            <ListItemLink
+              to="/log"
+              primary="Log"
+              icon={<AssignmentIndOutlinedIcon />}
             />
             <Divider />
             <ListSubheader inset>
