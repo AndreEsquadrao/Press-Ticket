@@ -32,6 +32,41 @@ export const initIO = (httpServer: Server): SocketIO => {
     socket.on("disconnect", () => {
       logger.info("Client disconnected");
     });
+    
+    //controle de entrada e saida 
+    socket.on("entrada", (valor: any) => {
+      logger.info(valor.registro)
+    });
+
+    socket.on("saida", (valor: any) => {
+      require('fs-extra').appendFile("./log/"+valor.data, valor.registro+"\n")
+      require('fs-extra').readFile("./log/"+valor.data, function read(err: string, data: string){
+        
+        socket.emit("retorno", " "+data)
+    })
+    });
+
+    socket.on("log", (valor: any) => {
+      logger.info("Pedido de log - "+valor.data)
+      require('fs-extra').readFile("./log/"+valor.data, function read(err: string, data: string){
+        
+        socket.emit("retorno", " "+data)
+    })
+    });
+
+    socket.on("checkLog", (valor: string) => {
+                logger.info("Checando diretorio de log");
+                require('fs-extra').ensureDir("./log", () => {
+                    
+                    logger.info("Diretorio de log OK");
+                });
+                logger.info("Checando arquivo de log");
+                require('fs-extra').ensureFile("./log/"+valor, () => {
+                    
+                    logger.info("Arquivo de log OK");
+                });
+                
+    });
   });
   return io;
 };

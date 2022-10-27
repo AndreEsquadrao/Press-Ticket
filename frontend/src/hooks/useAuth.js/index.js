@@ -7,13 +7,40 @@ import { toast } from "react-toastify";
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
-
+const socket = openSocket();
 const useAuth = () => {
 	const history = useHistory();
 	const [isAuth, setIsAuth] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [user, setUser] = useState({});
-
+	if(loading === false){
+		if(isAuth === true){
+			//logou
+			let data = new Date();
+			let diaHoje = ("0" + data.getDate()).slice(-2);
+			let mesHoje = ("0" + (data.getMonth() + 1)).slice(-2);
+			let anoHoje = data.getFullYear();
+			let horaHoje = ("0" + data.getHours()).slice(-2);
+			let minutosHoje = ("0" + data.getMinutes()).slice(-2);
+			let segundosHoje = ("0" + data.getSeconds()).slice(-2);
+			localStorage.setItem("userName", user.name)
+			localStorage.setItem("userEmail", user.email)
+			if(localStorage.getItem("fechado") !== ""){
+				let retro = localStorage.getItem("fechado");
+				localStorage.setItem("fechado", "");
+				socket.emit("saida", {
+					"data": diaHoje+"-"+mesHoje+"-"+anoHoje,
+					"registro": `<tr class="MuiTableRow-root"><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall">`+localStorage.getItem("userEmail")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(0, 0, 255);">`+localStorage.getItem("dataEntrada")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(255, 0, 0);">`+retro+`</td></tr>`
+				})
+			}
+			localStorage.setItem("dataSaida", "");
+			localStorage.setItem("logado", "sim");
+			localStorage.setItem("dataEntrada", diaHoje+"-"+mesHoje+"-"+anoHoje+" "+horaHoje+":"+minutosHoje+":"+segundosHoje)
+			socket.emit("entrada", {
+				"registro": "entrou no login"
+			})
+		}
+	}
 	api.interceptors.request.use(
 		config => {
 			const token = localStorage.getItem("token");
@@ -85,6 +112,7 @@ const useAuth = () => {
 	}, [user]);
 
 	const handleLogin = async userData => {
+		
 		setLoading(true);
 
 		try {
@@ -103,6 +131,7 @@ const useAuth = () => {
 	};
 
 	const handleLogout = async () => {
+		
 		setLoading(true);
 
 		try {
@@ -113,6 +142,19 @@ const useAuth = () => {
 			api.defaults.headers.Authorization = undefined;
 			setLoading(false);
 			history.push("/login");
+			let data = new Date();
+			let diaHoje = ("0" + data.getDate()).slice(-2);
+			let mesHoje = ("0" + (data.getMonth() + 1)).slice(-2);
+			let anoHoje = data.getFullYear();
+			let horaHoje = ("0" + data.getHours()).slice(-2);
+			let minutosHoje = ("0" + data.getMinutes()).slice(-2);
+			let segundosHoje = ("0" + data.getSeconds()).slice(-2);
+			localStorage.setItem("logado", "");
+			localStorage.setItem("dataSaida", diaHoje+"-"+mesHoje+"-"+anoHoje+" "+horaHoje+":"+minutosHoje+":"+segundosHoje)
+			socket.emit("saida", {
+				"data": diaHoje+"-"+mesHoje+"-"+anoHoje,
+				"registro": `<tr class="MuiTableRow-root"><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall">`+localStorage.getItem("userEmail")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(0, 0, 255);">`+localStorage.getItem("dataEntrada")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(255, 0, 0);">`+localStorage.getItem("dataSaida")+`</td></tr>`
+			})
 		} catch (err) {
 			toastError(err);
 			setLoading(false);

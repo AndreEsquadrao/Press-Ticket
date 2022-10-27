@@ -109,6 +109,7 @@ const TicketsManager = () => {
   const [showAllTickets, setShowAllTickets] = useState(false);
   const { user } = useContext(AuthContext);
 
+  
   const [, setOpenCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
@@ -176,12 +177,15 @@ const TicketsManager = () => {
           textColor="primary"
           aria-label="icon label tabs example"
         >
-          <Tab
-            value={"open"}
-            icon={<MoveToInboxIcon />}
-            label={i18n.t("tickets.tabs.open.title")}
-            classes={{ root: classes.tab }}
-          />
+
+          
+            <Tab
+              value={"open"}
+              icon={<MoveToInboxIcon />}
+              label={i18n.t("tickets.tabs.open.title")}
+              classes={{ root: classes.tab }}
+            />
+           
           <Tab
             value={"pending"}
             icon={<HourglassEmptyRoundedIcon />}
@@ -196,12 +200,21 @@ const TicketsManager = () => {
             }
             classes={{ root: classes.tab }}
           />
+
+        
+
           <Tab
+            
             value={"closed"}
+            
             icon={<AllInboxRoundedIcon />}
             label={i18n.t("tickets.tabs.closed.title")}
             classes={{ root: classes.tab }}
           />
+
+
+          
+                
         </Tabs>
       </Paper>
       <Paper square elevation={0} className={classes.ticketOptionsBox}>
@@ -265,7 +278,10 @@ const TicketsManager = () => {
         />
       </TabPanel>
 
-
+      <Can
+          role={user.profile}
+          perform="tickets-manager:showall"
+          yes={() => (
 
       <TabPanel value={tab} name="closed" className={classes.ticketsWrapper}>
         <TicketsList
@@ -274,6 +290,8 @@ const TicketsManager = () => {
           selectedQueueIds={selectedQueueIds}
         />
       </TabPanel>
+      )}
+      />
       <TabPanel value={tab} name="search" className={classes.ticketsWrapper}>
       <TagsFilter onFiltered={handleSelectedTags} />
         <TicketsList
@@ -285,6 +303,7 @@ const TicketsManager = () => {
       </TabPanel>
     </Paper>
   );
+  
 };
 
 export default TicketsManager;

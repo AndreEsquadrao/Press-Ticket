@@ -1,92 +1,124 @@
-import React from "react"
+import React, { useState, useEffect, useReducer } from "react"
 
+import openSocket from "../../services/socket-io";
+import Grid from "@material-ui/core/Grid";
+import MainContainer from "../../components/MainContainer";
+import MainHeader from "../../components/MainHeader";
+import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
+import Title from "../../components/Title";
+import TableRowSkeleton from "../../components/TableRowSkeleton";
+import UserModal from "../../components/UserModal";
+import ConfirmationModal from "../../components/ConfirmationModal";
 
+import { makeStyles } from "@material-ui/core/styles";
 
-import { Button, Divider, } from "@material-ui/core";
+import {
+	Button,
+	IconButton,
+	InputAdornment,
+	Paper,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableRow,
+	TextField,
+	Tooltip,
+	Select,
+	Input
+  } from "@material-ui/core";
+import { Socket } from "socket.io-client";
 
-
-
-const atualiza = () => {
-	if(localStorage.getItem("logurl") !== ""){
-		var url = localStorage.getItem("logurl")+"?comando=ler";//Sua URL
-
-		var xhttp = new XMLHttpRequest();
-		xhttp.open("GET", url, true);
-
-		xhttp.onreadystatechange = function(){//Função a ser chamada quando a requisição retornar do servidor
-			if ( xhttp.readyState === 4 && xhttp.status === 200 ) {//Verifica se o retorno do servidor deu certo
-				
-				try{ document.getElementById('saida').innerText = xhttp.responseText; }catch{}
-			}
-		}
-		
-
-		xhttp.send()
+const useStyles = makeStyles((theme) => ({
+	mainPaper: {
+	  flex: 2,
+	  padding: theme.spacing(2),
+	  margin: theme.spacing(1),
+	  overflowY: "scroll",
+	  ...theme.scrollbarStyles,
+	},
+  }));
+const socket = openSocket();
+const buscaLog = () => {
+	socket.emit("log", {
+		"data": document.getElementById('data').value.split('-').reverse().join('-')
+	})
+};
+const atLog = () => {
+	let data = new Date();
+	let diaHoje = ("0" + data.getDate()).slice(-2);
+	let mesHoje = ("0" + (data.getMonth() + 1)).slice(-2);
+	let anoHoje = data.getFullYear();
+	socket.emit("log", {
+		"data": diaHoje+"-"+mesHoje+"-"+anoHoje
+	})
+}
+socket.on("retorno", (data) => {
+	if(data === " undefined"){
+		alert("Nenhum registro nesta data")
 	}
 	else{
-		try{ document.getElementById('saida').innerText = "É necessário configurar o sistema de log em frontend/src/index.js"; }catch{}
+	document.getElementById('corpo').innerHTML = data;
 	}
-	
-}
-const apaga = () =>{
-
-	
-	if(window.confirm("Deseja apagar o histórico de login?") == true){
-		if(localStorage.getItem("logurl") !== ""){
-			var url = localStorage.getItem("logurl")+"?comando=apagar";//Sua URL
-	
-			var xhttp = new XMLHttpRequest();
-			xhttp.open("GET", url, true);
-	
-			xhttp.onreadystatechange = function(){//Função a ser chamada quando a requisição retornar do servidor
-				if ( xhttp.readyState === 4 && xhttp.status === 200 ) {//Verifica se o retorno do servidor deu certo
-					atualiza()
-					
-				}
-			}
-	
-			xhttp.send()
-		}
-		else{
-	
-		}
-	}
-
-
-	
-}
+})
 const Log = () => {
-	
-	
+	const classes = useStyles();
+	atLog();
 	
 	return (
-		<div>
-			
-						<Divider />
-						<Button
-							fullWidth
-							color="primary"
-							onClick={apaga}
-							style={{position: "fixed"}}
-							
-							
-						>Apagar Histórico</Button>
-						
-						
-						<div id="saida" style={{ margin: "50px" }}>
-		
-						</div>
-						
-		</div>
-		
-		
+		<MainContainer>
+			<MainHeader>
+			<Title>LOG</Title>
+			<MainHeaderButtonsWrapper>
+				<Input
+					id="data"
+					type="date"
+					onChange={buscaLog}
 					
+				/>
+				
+			</MainHeaderButtonsWrapper>
+			</MainHeader>
+			<Grid container spacing={0}>
+			<Grid item xs={12} md={8}>
+				<Paper
+					className={classes.mainPaper}
+					variant="outlined"
+					style={{"height":"500px"}}
+					// onScroll={handleScroll}
+				>
+					<Table size="small">
+						<TableHead>
+							<TableRow>
+								<TableCell align="center">E-mail</TableCell>
+								<TableCell align="center">LogIn</TableCell>
+								<TableCell align="center">LogOut</TableCell>
+								
+							</TableRow>
+						</TableHead>
+						<TableBody id="corpo">
+							
+						</TableBody>
+					</Table>
+				</Paper>
+			</Grid>
+			<Grid item xs={12} md={4}>
+				<Paper
+					className={classes.mainPaper}
+					variant="outlined"
+					// onScroll={handleScroll}
+				>
+					<div>
+
+					</div>
+				</Paper>
+			</Grid>
+			</Grid>
+		</MainContainer>
+
 	)
+
 	
 }
-
-setInterval(atualiza, 5000)
-
-
 
 export default Log
