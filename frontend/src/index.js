@@ -21,8 +21,9 @@ ReactDOM.render(
 	document.getElementById("root")
 );
 
-if(localStorage.getItem("logado") === "sim"){
-	window.onbeforeunload = () => { 	
+
+	window.onbeforeunload = () => { 
+		if(localStorage.getItem("logado") === "sim"){
 		let data = new Date();
 		let diaHoje = ("0" + data.getDate()).slice(-2);
 		let mesHoje = ("0" + (data.getMonth() + 1)).slice(-2);
@@ -30,10 +31,12 @@ if(localStorage.getItem("logado") === "sim"){
 		let horaHoje = ("0" + data.getHours()).slice(-2);
 		let minutosHoje = ("0" + data.getMinutes()).slice(-2);
 		let segundosHoje = ("0" + data.getSeconds()).slice(-2);
+		localStorage.setItem("prevEmail", localStorage.getItem("userEmail"))
 		localStorage.setItem("fechado", diaHoje+"-"+mesHoje+"-"+anoHoje+" "+horaHoje+":"+minutosHoje+":"+segundosHoje)
+		localStorage.setItem("prevIn", localStorage.getItem("dataEntrada"))
 		
-	};
-}
+	}
+};
 	
 
 

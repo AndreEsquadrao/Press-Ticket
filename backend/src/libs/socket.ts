@@ -38,6 +38,11 @@ export const initIO = (httpServer: Server): SocketIO => {
       logger.info(valor.registro)
     });
 
+    socket.on("deleta", (valor: any) => {
+      require('fs-extra').writeFile("./log/"+valor.data, "")
+      socket.emit("retorno", " ")
+    });
+
     socket.on("saida", (valor: any) => {
       require('fs-extra').appendFile("./log/"+valor.data, valor.registro+"\n")
       require('fs-extra').readFile("./log/"+valor.data, function read(err: string, data: string){

@@ -25,13 +25,16 @@ const useAuth = () => {
 			let segundosHoje = ("0" + data.getSeconds()).slice(-2);
 			localStorage.setItem("userName", user.name)
 			localStorage.setItem("userEmail", user.email)
-			if(localStorage.getItem("fechado") !== ""){
-				let retro = localStorage.getItem("fechado");
-				localStorage.setItem("fechado", "");
-				socket.emit("saida", {
-					"data": diaHoje+"-"+mesHoje+"-"+anoHoje,
-					"registro": `<tr class="MuiTableRow-root"><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall">`+localStorage.getItem("userEmail")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(0, 0, 255);">`+localStorage.getItem("dataEntrada")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(255, 0, 0);">`+retro+`</td></tr>`
-				})
+			if(localStorage.getItem("fechado")){
+
+				if(localStorage.getItem("fechado") !== ""){
+					let retro = localStorage.getItem("fechado");
+					localStorage.setItem("fechado", "");
+					socket.emit("saida", {
+						"data": diaHoje+"-"+mesHoje+"-"+anoHoje,
+						"registro": `<tr class="MuiTableRow-root"><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall">`+localStorage.getItem("prevEmail")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(0, 0, 255);">`+localStorage.getItem("prevIn")+`</td><td class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeSmall" style="color: rgb(255, 0, 0);">`+retro+`</td></tr>`
+					})
+				}
 			}
 			localStorage.setItem("dataSaida", "");
 			localStorage.setItem("logado", "sim");

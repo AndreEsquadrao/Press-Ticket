@@ -61,15 +61,41 @@ socket.on("retorno", (data) => {
 	document.getElementById('corpo').innerHTML = data;
 	}
 })
+const deleta = () =>{
+	let r = window.confirm("Deseja deletar o Log mostrado?")
+	if(r){
+		let data = new Date();
+	let diaHoje = ("0" + data.getDate()).slice(-2);
+	let mesHoje = ("0" + (data.getMonth() + 1)).slice(-2);
+	let anoHoje = data.getFullYear();
+	if(document.getElementById('data').value === ""){
+		socket.emit("deleta", {
+			"data": diaHoje+"-"+mesHoje+"-"+anoHoje
+		})
+	}
+	else{
+		socket.emit("deleta", {
+			"data": document.getElementById('data').value.split('-').reverse().join('-')
+		})
+	}
+	
+	}
+}
 const Log = () => {
 	const classes = useStyles();
 	atLog();
-	
 	return (
 		<MainContainer>
 			<MainHeader>
-			<Title>LOG</Title>
+			<Title>LOG </Title>
 			<MainHeaderButtonsWrapper>
+			<Button
+              variant="contained"
+              color="primary"
+              onClick={deleta}
+            >
+            APAGAR ESTE LOG
+            </Button>
 				<Input
 					id="data"
 					type="date"
@@ -118,7 +144,6 @@ const Log = () => {
 
 	)
 
-	
 }
 
 export default Log
