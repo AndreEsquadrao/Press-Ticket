@@ -17,7 +17,7 @@ const rules = {
 		static: [
 			
 			"tickets-manager:showall",
-			"user-modal:editProfile",
+			
 			
 			
 			
